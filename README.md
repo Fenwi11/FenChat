@@ -41,6 +41,7 @@
 <script src="script.js"></script>
 </body>
 </html>
+
 body {
   font-family: Arial;
   margin: 0;
@@ -82,6 +83,7 @@ body {
 .hidden {
   display: none;
 }
+
 let name = "";
 
 function saveName() {
