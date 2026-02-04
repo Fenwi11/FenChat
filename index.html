@@ -485,3 +485,155 @@
                 </div>
                 <div class="chat-time">
                     <div>16.45</div>
+                </div>
+            </div>
+        </div>
+        <div class="start-chat-section">
+            <h3>Mulai chat</h3>
+            <div class="contact-item" onclick="openChat('Utton', 'Personal')">
+                <div class="contact-avatar">U</div>
+                <div class="contact-name">Utton</div>
+                <div class="contact-chat-btn">Chat</div>
+            </div>
+            <div class="contact-item" onclick="openChat('Bintang', 'Personal')">
+                <div class="contact-avatar">B</div>
+                <div class="contact-name">Bintang</div>
+                <div class="contact-chat-btn">Chat</div>
+            </div>
+            <div class="contact-item" onclick="openChat('Rade', 'Personal')">
+                <div class="contact-avatar">R</div>
+                <div class="contact-name">Rade</div>
+                <div class="contact-chat-btn">Chat</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Page -->
+    <div id="chat-page">
+        <div class="chat-header">
+            <img src="https://cdn-icons-png.flaticon.com/512/271/271220.png" class="back-btn" onclick="backToChatList()">
+            <div class="chat-header-avatar" id="chat-avatar-display">R</div>
+            <div class="chat-header-info">
+                <div class="chat-header-name" id="chat-name-display">RANDOM</div>
+                <div class="chat-header-status">2 anggota • Terakhir aktif 06.27</div>
+            </div>
+            <div class="chat-header-icons">
+                <img src="https://cdn-icons-png.flaticon.com/512/1159/1159631.png" alt="Call">
+                <img src="https://cdn-icons-png.flaticon.com/512/60/60540.png" alt="Camera">
+                <img src="https://cdn-icons-png.flaticon.com/512/1828/1828859.png" alt="More">
+            </div>
+        </div>
+        <div class="chat-messages" id="chat-messages-content">
+            <div class="message-date"><span>28 Januari 2026</span></div>
+            <div class="encryption-note">
+                Pesan dan panggilan terenkripsi secara end-to-end. Hanya orang di chat ini yang bisa membaca, mendengarkan, atau membagikannya. <a href="#" style="color:#25D366; text-decoration:none;">Pelajari selengkapnya</a>
+            </div>
+            <div class="message-date"><span>17 Juni 2025</span></div>
+            <div class="group-info-card">
+                <div class="group-info-avatar">R</div>
+                <div class="group-info-text">Anda yang membuat grup ini</div>
+                <div class="group-info-members">Grup • 2 anggota</div>
+                <a href="#" class="group-info-btn">Tambahkan deskripsi...</a>
+                <a href="#" class="group-info-btn">+ Tambah anggota</a>
+                <a href="#" class="group-info-btn">Undang via tautan atau kode QR</a>
+            </div>
+            <div class="message-date"><span>28 Januari 2026</span></div>
+            <div class="message my-message">
+                <div>Na riset orang hpku anjai</div>
+                <div class="message-time">23.01 <span class="message-status">✓✓</span></div>
+            </div>
+            <div class="message-date"><span>Kamis</span></div>
+            <div class="pending-message">
+                <div>Cwee</div>
+                <div>Menunggu pesan ini. Ini mungkin membutuhkan waktu beberapa saat.</div>
+                <a href="#">Pelajari selengkapnya</a>
+                <div class="pending-time">06.27</div>
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <div class="input-icons">
+                <img src="https://cdn-icons-png.flaticon.com/512/100/100133.png" alt="Emoji">
+                <img src="https://cdn-icons-png.flaticon.com/512/136/136717.png" alt="Attach">
+            </div>
+            <input type="text" class="chat-input" placeholder="Ketik pesan">
+            <div class="send-btn" onclick="sendChatMessage()">
+                <img src="https://cdn-icons-png.flaticon.com/512/126/126473.png" alt="Send">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Splash Screen - 1 DETIK SAJA!
+        setTimeout(function() {
+            document.getElementById("splash-screen").style.display = "none";
+            checkIfLoggedIn();
+        }, 1000); // Pastikan angka ini 1000
+
+        // Fungsi Auth
+        function showRegister() {
+            document.getElementById("login-container").style.display = "none";
+            document.getElementById("register-container").style.display = "block";
+        }
+        function showLogin() {
+            document.getElementById("register-container").style.display = "none";
+            document.getElementById("login-container").style.display = "block";
+        }
+        function login() {
+            const username = document.getElementById("login-username").value;
+            if(username) {
+                localStorage.setItem("nschat-user", username);
+                goToChatList();
+            } else {
+                alert("Masukkan nama pengguna dulu ya!");
+            }
+        }
+        function register() {
+            const username = document.getElementById("reg-username").value;
+            if(username) {
+                localStorage.setItem("nschat-user", username);
+                goToChatList();
+            } else {
+                alert("Buat nama pengguna dulu ya!");
+            }
+        }
+        function checkIfLoggedIn() {
+            const savedUser = localStorage.getItem("nschat-user");
+            if(savedUser) {
+                goToChatList();
+            } else {
+                document.getElementById("auth-page").style.display = "block";
+            }
+        }
+
+        // Fungsi Halaman Chat
+        function goToChatList() {
+            document.getElementById("auth-page").style.display = "none";
+            document.getElementById("chat-list-page").style.display = "flex";
+        }
+        function backToChatList() {
+            document.getElementById("chat-page").style.display = "none";
+            document.getElementById("chat-list-page").style.display = "flex";
+        }
+        function openChat(chatName, chatType) {
+            document.getElementById("chat-list-page").style.display = "none";
+            document.getElementById("chat-page").style.display = "flex";
+            document.getElementById("chat-name-display").textContent = chatName;
+            document.getElementById("chat-avatar-display").textContent = chatName.charAt(0);
+        }
+        function sendChatMessage() {
+            const input = document.querySelector(".chat-input");
+            const message = input.value;
+            if(message) {
+                const messagesArea = document.getElementById("chat-messages-content");
+                const newMsg = document.createElement("div");
+                newMsg.className = "message my-message";
+                newMsg.innerHTML = `<div>${message}</div><div class="message-time">${new Date().getHours()}.${new Date().getMinutes().toString().padStart(2, '0')} <span class="message-status">✓</span></div>`;
+                messagesArea.appendChild(newMsg);
+                input.value = "";
+                messagesArea.scrollTop = messagesArea.scrollHeight;
+            }
+        }
+    </script>
+</body>
+</html>
+
