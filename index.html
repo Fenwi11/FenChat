@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NS Chat - Dibuat oleh Fenwi</title>
+    <title>NS Chat - Mirip WhatsApp</title>
     <style>
         * {
             margin: 0;
@@ -12,160 +12,412 @@
             font-family: Arial, sans-serif;
         }
 
-        /* Splash Screen Style */
+        body {
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        /* Splash Screen */
         #splash-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #000000;
+            background-color: #000;
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 9999;
         }
-
         #splash-screen h1 {
-            color: #ffffff;
             font-size: 48px;
-            font-weight: bold;
+            color: #fff;
         }
 
-        /* Main Content Style */
-        #main-content, #chat-page {
+        /* Auth Page */
+        #auth-page {
             display: none;
-            width: 100%;
+            padding-top: 50px;
             height: 100vh;
-            background-color: #1a1a1a;
-            color: #ffffff;
         }
-
         .auth-container {
             max-width: 400px;
             margin: 0 auto;
             padding: 20px;
-            padding-top: 100px;
         }
-
         .auth-container h2 {
             text-align: center;
             margin-bottom: 30px;
             font-size: 32px;
         }
-
         .input-group {
             margin-bottom: 20px;
         }
-
         .input-group label {
             display: block;
             margin-bottom: 8px;
-            font-size: 16px;
         }
-
         .input-group input {
             width: 100%;
             padding: 12px;
             border: none;
             border-radius: 4px;
+            background-color: #333;
+            color: #fff;
             font-size: 16px;
-            background-color: #333333;
-            color: #ffffff;
         }
-
         .btn {
             width: 100%;
             padding: 12px;
             border: none;
             border-radius: 4px;
+            background-color: #25D366;
+            color: #fff;
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
-            background-color: #007bff;
-            color: #ffffff;
             margin-bottom: 15px;
         }
-
-        .btn:hover {
-            background-color: #0056b3;
-        }
-
         .switch-auth {
             text-align: center;
             font-size: 14px;
         }
-
         .switch-auth a {
-            color: #007bff;
+            color: #25D366;
             text-decoration: none;
         }
 
-        /* Chat Page Style */
-        #chat-page {
-            display: flex;
+        /* Chat List Page */
+        #chat-list-page {
+            display: none;
             flex-direction: column;
-            justify-content: space-between;
+            height: 100vh;
         }
-
-        .chat-header {
+        .page-header {
+            background-color: #202C33;
             padding: 15px;
-            background-color: #222222;
-            border-bottom: 1px solid #444444;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #364652;
+        }
+        .header-title {
             font-size: 20px;
             font-weight: bold;
         }
+        .header-icons img {
+            width: 24px;
+            height: 24px;
+            margin-left: 20px;
+            filter: invert(1);
+        }
+        .search-bar {
+            background-color: #202C33;
+            padding: 10px;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 20px;
+            background-color: #364652;
+            color: #fff;
+            font-size: 16px;
+        }
+        .search-bar input::placeholder {
+            color: #8696A0;
+        }
+        .chat-list {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+        .chat-item {
+            display: flex;
+            padding: 15px;
+            border-bottom: 1px solid #2A3942;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .chat-item:hover {
+            background-color: #2A3942;
+        }
+        .chat-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #364652;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            margin-right: 15px;
+        }
+        .chat-info {
+            flex-grow: 1;
+        }
+        .chat-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        .chat-last-message {
+            font-size: 14px;
+            color: #8696A0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .chat-time {
+            font-size: 12px;
+            color: #8696A0;
+        }
+        .chat-unread {
+            background-color: #25D366;
+            color: #fff;
+            font-size: 12px;
+            padding: 2px 7px;
+            border-radius: 50%;
+            margin-top: 5px;
+        }
+        .start-chat-section {
+            padding: 15px;
+            border-top: 1px solid #364652;
+        }
+        .start-chat-section h3 {
+            font-size: 16px;
+            color: #8696A0;
+            margin-bottom: 10px;
+        }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            cursor: pointer;
+        }
+        .contact-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #364652;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            margin-right: 15px;
+        }
+        .contact-name {
+            font-size: 16px;
+        }
+        .contact-chat-btn {
+            color: #25D366;
+            margin-left: auto;
+            font-size: 14px;
+        }
 
+        /* Chat Page (Grup Seperti WhatsApp) */
+        #chat-page {
+            display: none;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .chat-header {
+            background-color: #202C33;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #364652;
+        }
+        .back-btn {
+            width: 24px;
+            height: 24px;
+            filter: invert(1);
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        .chat-header-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #364652;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            margin-right: 15px;
+        }
+        .chat-header-info {
+            flex-grow: 1;
+        }
+        .chat-header-name {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .chat-header-status {
+            font-size: 12px;
+            color: #8696A0;
+        }
+        .chat-header-icons img {
+            width: 24px;
+            height: 24px;
+            margin-left: 20px;
+            filter: invert(1);
+            cursor: pointer;
+        }
         .chat-messages {
             flex-grow: 1;
             padding: 20px;
+            background-color: #1E2C34;
+            background-image: url('https://www.transparenttextures.com/patterns/whatsapp-background.png');
             overflow-y: auto;
         }
-
+        .message-date {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .message-date span {
+            background-color: #202C33;
+            color: #8696A0;
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 10px;
+        }
+        .encryption-note {
+            background-color: #182229;
+            color: #8696A0;
+            font-size: 12px;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .group-info-card {
+            background-color: #202C33;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .group-info-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #364652;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            margin: 0 auto 15px;
+        }
+        .group-info-text {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .group-info-members {
+            font-size: 12px;
+            color: #8696A0;
+            margin-bottom: 15px;
+        }
+        .group-info-btn {
+            display: block;
+            color: #25D366;
+            font-size: 14px;
+            text-decoration: none;
+            margin-bottom: 8px;
+        }
         .message {
             margin-bottom: 15px;
             padding: 10px 15px;
-            border-radius: 20px;
+            border-radius: 10px;
             max-width: 70%;
+            position: relative;
         }
-
         .my-message {
-            background-color: #007bff;
-            color: white;
+            background-color: #005C4B;
+            color: #fff;
             margin-left: auto;
         }
-
         .other-message {
-            background-color: #333333;
-            color: white;
+            background-color: #202C33;
+            color: #fff;
             margin-right: auto;
         }
-
-        .chat-input {
+        .message-sender {
+            font-size: 12px;
+            color: #8696A0;
+            margin-bottom: 3px;
+        }
+        .message-time {
+            font-size: 10px;
+            color: #8696A0;
+            text-align: right;
+            margin-top: 5px;
+        }
+        .message-status {
+            font-size: 10px;
+            margin-left: 5px;
+        }
+        .pending-message {
+            background-color: #202C33;
+            color: #8696A0;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .pending-message a {
+            color: #25D366;
+            text-decoration: none;
+            font-size: 12px;
+        }
+        .pending-time {
+            font-size: 12px;
+            color: #8696A0;
+            text-align: right;
+            margin-top: 5px;
+        }
+        .chat-input-area {
             display: flex;
-            padding: 15px;
-            background-color: #222222;
-            border-top: 1px solid #444444;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #202C33;
+            border-top: 1px solid #364652;
         }
-
-        .chat-input input {
-            flex-grow: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 20px;
-            background-color: #333333;
-            color: white;
-            margin-right: 10px;
-        }
-
-        .chat-input button {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 20px;
-            background-color: #007bff;
-            color: white;
+        .input-icons img {
+            width: 24px;
+            height: 24px;
+            margin-right: 15px;
+            filter: invert(1);
             cursor: pointer;
+        }
+        .chat-input {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 20px;
+            background-color: #364652;
+            color: #fff;
+            font-size: 16px;
+        }
+        .chat-input::placeholder {
+            color: #8696A0;
+        }
+        .send-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #25D366;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .send-btn img {
+            width: 20px;
+            height: 20px;
+            filter: invert(1);
         }
     </style>
 </head>
@@ -175,9 +427,8 @@
         <h1>NS Chat</h1>
     </div>
 
-    <!-- Auth Content -->
-    <div id="main-content">
-        <!-- Login Form -->
+    <!-- Auth Page -->
+    <div id="auth-page">
         <div id="login-container" class="auth-container">
             <h2>Masuk</h2>
             <div class="input-group">
@@ -189,8 +440,6 @@
                 Belum punya akun? <a href="#" onclick="showRegister()">Daftar di sini</a>
             </div>
         </div>
-
-        <!-- Register Form -->
         <div id="register-container" class="auth-container" style="display: none;">
             <h2>Daftar</h2>
             <div class="input-group">
@@ -204,96 +453,35 @@
         </div>
     </div>
 
-    <!-- Chat Page -->
-    <div id="chat-page">
-        <div class="chat-header">NS Chat - <span id="current-user"></span></div>
-        <div class="chat-messages" id="chat-messages">
-            <div class="message other-message">Halo! Selamat datang di NS Chat 😊</div>
+    <!-- Chat List Page -->
+    <div id="chat-list-page">
+        <div class="page-header">
+            <div class="header-title">NS Chat</div>
+            <div class="header-icons">
+                <img src="https://cdn-icons-png.flaticon.com/512/60/60540.png" alt="Camera">
+                <img src="https://cdn-icons-png.flaticon.com/512/1828/1828859.png" alt="More">
+            </div>
         </div>
-        <div class="chat-input">
-            <input type="text" id="message-input" placeholder="Ketik pesan...">
-            <button onclick="sendMessage()">Kirim</button>
+        <div class="search-bar">
+            <input type="text" placeholder="Cari atau mulai chat baru">
         </div>
-    </div>
-
-    <script>
-        // Splash screen delay - 1 DETIK (1000 milidetik)
-        setTimeout(function() {
-            document.getElementById("splash-screen").style.display = "none";
-            checkLoggedIn();
-        }, 1000);
-
-        // Fungsi untuk berpindah halaman login/daftar
-        function showRegister() {
-            document.getElementById("login-container").style.display = "none";
-            document.getElementById("register-container").style.display = "block";
-        }
-
-        function showLogin() {
-            document.getElementById("register-container").style.display = "none";
-            document.getElementById("login-container").style.display = "block";
-        }
-
-        // Fungsi login dan daftar
-        function login() {
-            const username = document.getElementById("login-username").value;
-            if (username) {
-                localStorage.setItem("nschat-username", username);
-                goToChatPage(username);
-            } else {
-                alert("Silakan masukkan nama pengguna!");
-            }
-        }
-
-        function register() {
-            const username = document.getElementById("reg-username").value;
-            if (username) {
-                localStorage.setItem("nschat-username", username);
-                alert(`Akun berhasil dibuat untuk ${username}!`);
-                goToChatPage(username);
-            } else {
-                alert("Silakan buat nama pengguna!");
-            }
-        }
-
-        // Fungsi ke halaman chat
-        function goToChatPage(username) {
-            document.getElementById("main-content").style.display = "none";
-            document.getElementById("chat-page").style.display = "flex";
-            document.getElementById("current-user").textContent = username;
-        }
-
-        // Cek jika sudah login
-        function checkLoggedIn() {
-            const savedUser = localStorage.getItem("nschat-username");
-            if (savedUser) {
-                goToChatPage(savedUser);
-            } else {
-                document.getElementById("main-content").style.display = "block";
-            }
-        }
-
-        // Fungsi kirim pesan
-        function sendMessage() {
-            const messageText = document.getElementById("message-input").value;
-            const username = localStorage.getItem("nschat-username");
-            if (messageText && username) {
-                const messagesContainer = document.getElementById("chat-messages");
-                const newMessage = document.createElement("div");
-                newMessage.className = "message my-message";
-                newMessage.textContent = messageText;
-                messagesContainer.appendChild(newMessage);
-                document.getElementById("message-input").value = "";
-                messagesContainer.scrollTop = messagesContainer.scrollHeight; // Gulir ke bawah
-            }
-        }
-
-        // Kirim pesan dengan tombol Enter
-        document.getElementById("message-input").addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                sendMessage();
-            }
-        });
-    </script>
-</body>
-</html>
+        <div class="chat-list">
+            <div class="chat-item" onclick="openChat('RANDOM', 'Grup')">
+                <div class="chat-avatar">R</div>
+                <div class="chat-info">
+                    <div class="chat-name">RANDOM</div>
+                    <div class="chat-last-message">Menunggu pesan ini. Ini mungkin membutuhkan waktu...</div>
+                </div>
+                <div class="chat-time">
+                    <div>06.27</div>
+                    <div class="chat-unread">1</div>
+                </div>
+            </div>
+            <div class="chat-item" onclick="openChat('GC STOCK || CUTZZ STOR [1]', 'Grup')">
+                <div class="chat-avatar">G</div>
+                <div class="chat-info">
+                    <div class="chat-name">GC STOCK || CUTZZ STOR [1]</div>
+                    <div class="chat-last-message">~ BALZZ STORE telah ditambahkan</div>
+                </div>
+                <div class="chat-time">
+                    <div>16.45</div>
