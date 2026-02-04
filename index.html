@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NS Chat</title>
+    <link rel="icon" type="image/png" href="https://via.placeholder.com/50?text=NS" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Splash Screen */
+        .splash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.8s ease;
+        }
+        .splash img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+        }
+        .splash h1 {
+            color: #fff;
+            font-size: 2.5rem;
+        }
+        .splash.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Body & Layout */
+        body {
+            background: #1a1a2e;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            background: #16213e;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 2px solid #e94560;
+        }
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        header small {
+            color: #ddd;
+        }
+
+        /* Register & Auth Section */
+        #authSection {
+            max-width: 400px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #0f3460;
+            border-radius: 10px;
+            text-align: center;
+        }
+        #authSection input {
+            width: 80%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        #authSection button {
+            padding: 12px 25px;
+            background: #e94560;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        /* Chat & Group Menu */
+        #menuSection {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #0f3460;
+            border-radius: 10px;
+            text-align: center;
+        }
+        #menuSection button {
+            padding: 10px 20px;
+            background: #e94560;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        /* Chat Area */
+        #chatSection {
+            max-width: 600px;
+            margin: 0 auto 80px;
+            padding: 10px;
+            display: none;
+        }
+        #chatHeader {
+            background: #16213e;
+            padding: 10px;
+            border-radius: 5px 5px 0 0;
+            text-align: center;
+        }
+        #messages {
+            background: #fff;
+            color: #000;
+            height: 400px;
+            padding: 15px;
+            overflow-y: auto;
+            border-radius: 0 0 5px 5px;
+            margin-bottom: 10px;
+        }
+        .message {
+            margin: 8px 0;
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 70%;
+        }
+        .myMessage {
+            background: #e94560;
+            color: #fff;
+            margin-left: auto;
+        }
+        .otherMessage {
+            background: #ddd;
+            margin-right: auto;
+        }
+        #chatInput {
+            display: flex;
+            gap: 10px;
+        }
+        #chatInput input {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        #chatInput button {
+            padding: 12px 20px;
+            background: #e94560;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Story Section */
+        #storySection {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #0f3460;
+            border-radius: 10px;
+            display: none;
+            text-align: center;
+        }
+        #storyUpload {
+            margin: 15px 0;
+        }
+        #storyUpload input {
+            margin: 10px 0;
+            color: #fff;
+        }
+        #storiesContainer {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .storyItem {
+            background: #16213e;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .storyItem img, .storyItem video {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        /* Footer */
+        footer {
+            background: #16213e;
+            padding: 10px;
+            text-align: center;
+            margin-top: auto;
+            font-size: 0.9rem;
+            color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div class="splash" id="splash">
+        <img src="https://via.placeholder.com/150?text=NS" alt="NS Logo">
+        <h1>NS Chat</h1>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <h1>NS Chat</h1>
+        <small>Pembuat: Fenwi</small>
+    </header>
+
+    <!-- Auth Section -->
+    <div id="authSection">
+        <h2>Daftar/Masuk</h2>
+        <input type="text" id="userName" placeholder="Masukkan nama Anda">
+        <button onclick="registerUser()">Daftar & Masuk</button>
+    </div>
+
+    <!-- Menu Section -->
+    <div id="menuSection" style="display: none;">
+        <h2>Pilih Opsi</h2>
+        <button onclick="openSingleChat()">Chat Pribadi</button>
+        <button onclick="openGroupChat()">Buat/Gabung Grup</button>
+        <button onclick="openStorySection()">Lihat/Kirim Story</button>
+    </div>
+
+    <!-- Chat Section -->
+    <div id="chatSection">
+        <div id="chatHeader">
+            <h3 id="chatTitle">Chat Pribadi</h3>
+            <input type="text" id="targetName" placeholder="Nama Tujuan/Grup" style="width: 80%; margin: 10px 0;">
+            <button onclick="setChatTarget()">Set Tujuan</button>
+        </div>
+        <div id="messages"></div>
+        <div id="chatInput">
+            <input type="text" id="messageText" placeholder="Ketik pesan...">
+            <button onclick="sendMessage()">Kirim</button>
+        </div>
+    </div>
+
+    <!-- Story Section -->
+    <div id="storySection">
+        <h2>NS Stories</h2>
+        <div id="storyUpload">
+            <input type="file" id="storyFile" accept="image/*,video/*">
+            <button onclick="uploadStory()">Unggah Story</button>
+        </div>
+        <div id="storiesContainer"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2026 NS Chat | Dibuat oleh Fenwi
+    </footer>
+
+    <script>
+        // Data Storage
+        let currentUser = "";
+        let currentTarget = "";
+        let chats = JSON.parse(localStorage.getItem("nsChats")) || {};
+        let stories = JSON.parse(localStorage.getItem("nsStories")) || [];
+
+        // Splash Screen
+        window.onload = () => {
+            setTimeout(() => {
+                document.getElementById("splash").classList.add("hide");
+            }, 3000); // Tampil 3 detik
+        };
+
+        // Register User
+        function registerUser() {
+            const name = document.getElementById("userName").value.trim();
+            if (!name) {
+                alert("Masukkan nama Anda terlebih dahulu!");
+                return;
+            }
+            currentUser = name;
+            localStorage.setItem("nsCurrentUser", name);
+            document.getElementById("authSection").style.display = "none";
+            document.getElementById("menuSection").style.display = "block";
+        }
+
+        // Open Chat Options
+        function openSingleChat() {
+            document.getElementById("chatTitle").textContent = "Chat Pribadi";
+            document.getElementById("chatSection").style.display = "block";
+            document.getElementById("menuSection").style.display = "none";
+            document.getElementById("storySection").style.display = "none";
+            loadMessages();
+        }
+
+        function openGroupChat() {
+            document.getElementById("chatTitle").textContent = "Chat Grup";
+            document.getElementById("chatSection").style.display = "block";
+            document.getElementById("menuSection").style.display = "none";
+            document.getElementById("storySection").style.display = "none";
+            loadMessages();
+        }
+
+        function setChatTarget() {
+            currentTarget = document.getElementById("targetName").value.trim();
+            if (!currentTarget) {
+                alert("Masukkan nama tujuan atau grup!");
+                return;
+            }
+            loadMessages();
+        }
+
+        // Chat Functions
+        function loadMessages() {
+            const messagesDiv = document.getElementById("messages");
+            messagesDiv.innerHTML = "";
+            const chatKey = `${currentUser}-${currentTarget}` || currentTarget;
+            const chatHistory = chats[chatKey] || [];
+            
+            chatHistory.forEach(msg => {
+                const msgDiv = document.createElement("div");
+                msgDiv.className = msg.sender === currentUser ? "message myMessage" : "message otherMessage";
+                msgDiv.innerHTML = `<strong>${msg.sender}:</strong> ${msg.text}`;
+                messagesDiv.appendChild(msgDiv);
+            });
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function sendMessage() {
+            const text = document.getElementById("messageText").value.trim();
+            if (!text || !currentTarget) return;
+            
+            const chatKey = `${currentUser}-${currentTarget}` || currentTarget;
+            if (!chats[chatKey]) chats[chatKey] = [];
+            
+            const message = {
+                sender: currentUser,
+                text: text,
+                time: new Date().toLocaleTimeString()
+            };
+            
+            chats[chatKey].push(message);
+            localStorage.setItem("nsChats", JSON.stringify(chats));
+            document.getElementById("messageText").value = "";
+            loadMessages();
+        }
+
+        // Story Functions
+        function openStorySection() {
+            document.getElementById("storySection").style.display = "block";
+            document.getElementById("menuSection").style.display = "none";
+            document.getElementById("chatSection").style.display = "none";
+            loadStories();
+        }
+
+        function uploadStory() {
+            const fileInput = document.getElementById("storyFile");
+            const file = fileInput.files[0];
+            if (!file) {
+                alert("Pilih foto/video terlebih dahulu!");
+                return;
+            }
+
+            // Baca file dan simpan sebagai URL (untuk HD)
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const story = {
+                    id: Date.now(),
+                    sender: currentUser,
+                    url: e.target.result,
+                    type: file.type.split("/")[0],
+                    time: new Date().toLocaleString()
+                };
+                stories.push(story);
+                localStorage.setItem("nsStories", JSON.stringify(stories));
+                loadStories();
+                fileInput.value = "";
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function loadStories() {
+            const container = document.getElementById("storiesContainer");
+            container.innerHTML = "";
+            stories.forEach(story => {
+                const item = document.createElement("div");
+                item.className = "storyItem";
+                if (story.type === "image") {
+                    item.innerHTML = `
+                        <img src="${story.url}" alt="Story ${story.sender}">
+                        <p><strong>${story.sender}</strong><br>${story.time}</p>
+                    `;
+                } else {
+                    item.innerHTML = `
+                        <video controls src="${story.url}" type="${story.type}/mp4"></video>
+                        <p><strong>${story.sender}</strong><br>${story.time}</p>
+                    `;
+                }
+                container.appendChild(item);
+            });
+        }
+
+        // Auto Login
+        window.onload = () => {
+            setTimeout(() => {
+                document.getElementById("splash").classList.add("hide");
+            }, 3000);
+
+            const savedUser = localStorage.getItem("nsCurrentUser");
+            if (savedUser) {
+                currentUser = savedUser;
+                document.getElementById("authSection").style.display = "none";
+                document.getElementById("menuSection").style.display = "block";
+            }
+        };
+    </script>
+</body>
+              </html>
+              
