@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NS Chat</title>
-    <link rel="icon" type="image/png" href="https://via.placeholder.com/50?text=NS" />
+    <title>NS Chat - Dibuat oleh Fenwi</title>
     <style>
         * {
             margin: 0;
@@ -13,332 +12,184 @@
             font-family: Arial, sans-serif;
         }
 
-        /* Splash Screen */
-        .splash {
+        /* Splash Screen Style */
+        #splash-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100vh;
-            background: #000;
+            height: 100%;
+            background-color: #000000;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
-            transition: opacity 0.8s ease;
+            z-index: 9999;
         }
-        .splash img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
+
+        #splash-screen h1 {
+            color: #ffffff;
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        /* Main Content Style */
+        #main-content {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+
+        .auth-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-top: 100px;
+        }
+
+        .auth-container h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+
+        .input-group {
             margin-bottom: 20px;
         }
-        .splash h1 {
-            color: #fff;
-            font-size: 2.5rem;
-        }
-        .splash.hide {
-            opacity: 0;
-            pointer-events: none;
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
         }
 
-        /* Body & Layout */
-        body {
-            background: #1a1a2e;
-            color: #fff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Header */
-        header {
-            background: #16213e;
-            padding: 15px;
-            text-align: center;
-            border-bottom: 2px solid #e94560;
-        }
-        header h1 {
-            font-size: 1.8rem;
-            margin-bottom: 5px;
-        }
-        header small {
-            color: #ddd;
-        }
-
-        /* Register & Auth Section */
-        #authSection {
-            max-width: 400px;
-            margin: 30px auto;
-            padding: 20px;
-            background: #0f3460;
-            border-radius: 10px;
-            text-align: center;
-        }
-        #authSection input {
-            width: 80%;
-            padding: 12px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-        #authSection button {
-            padding: 12px 25px;
-            background: #e94560;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-
-        /* Chat & Group Menu */
-        #menuSection {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-            background: #0f3460;
-            border-radius: 10px;
-            text-align: center;
-        }
-        #menuSection button {
-            padding: 10px 20px;
-            background: #e94560;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            font-size: 1rem;
-            margin: 5px;
-            cursor: pointer;
-        }
-
-        /* Chat Area */
-        #chatSection {
-            max-width: 600px;
-            margin: 0 auto 80px;
-            padding: 10px;
-            display: none;
-        }
-        #chatHeader {
-            background: #16213e;
-            padding: 10px;
-            border-radius: 5px 5px 0 0;
-            text-align: center;
-        }
-        #messages {
-            background: #fff;
-            color: #000;
-            height: 400px;
-            padding: 15px;
-            overflow-y: auto;
-            border-radius: 0 0 5px 5px;
-            margin-bottom: 10px;
-        }
-        .message {
-            margin: 8px 0;
-            padding: 10px;
-            border-radius: 8px;
-            max-width: 70%;
-        }
-        .myMessage {
-            background: #e94560;
-            color: #fff;
-            margin-left: auto;
-        }
-        .otherMessage {
-            background: #ddd;
-            margin-right: auto;
-        }
-        #chatInput {
-            display: flex;
-            gap: 10px;
-        }
-        #chatInput input {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-        #chatInput button {
-            padding: 12px 20px;
-            background: #e94560;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        /* Story Section */
-        #storySection {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-            background: #0f3460;
-            border-radius: 10px;
-            display: none;
-            text-align: center;
-        }
-        #storyUpload {
-            margin: 15px 0;
-        }
-        #storyUpload input {
-            margin: 10px 0;
-            color: #fff;
-        }
-        #storiesContainer {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-        .storyItem {
-            background: #16213e;
-            padding: 10px;
-            border-radius: 10px;
-        }
-        .storyItem img, .storyItem video {
+        .input-group input {
             width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 5px;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: #333333;
+            color: #ffffff;
         }
 
-        /* Footer */
-        footer {
-            background: #16213e;
-            padding: 10px;
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            background-color: #007bff;
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .switch-auth {
             text-align: center;
-            margin-top: auto;
-            font-size: 0.9rem;
-            color: #ddd;
+            font-size: 14px;
+        }
+
+        .switch-auth a {
+            color: #007bff;
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
     <!-- Splash Screen -->
-    <div class="splash" id="splash">
-        <img src="https://via.placeholder.com/150?text=NS" alt="NS Logo">
+    <div id="splash-screen">
         <h1>NS Chat</h1>
     </div>
 
-    <!-- Header -->
-    <header>
-        <h1>NS Chat</h1>
-        <small>Pembuat: Fenwi</small>
-    </header>
-
-    <!-- Auth Section -->
-    <div id="authSection">
-        <h2>Daftar/Masuk</h2>
-        <input type="text" id="userName" placeholder="Masukkan nama Anda">
-        <button onclick="registerUser()">Daftar & Masuk</button>
-    </div>
-
-    <!-- Menu Section -->
-    <div id="menuSection" style="display: none;">
-        <h2>Pilih Opsi</h2>
-        <button onclick="openSingleChat()">Chat Pribadi</button>
-        <button onclick="openGroupChat()">Buat/Gabung Grup</button>
-        <button onclick="openStorySection()">Lihat/Kirim Story</button>
-    </div>
-
-    <!-- Chat Section -->
-    <div id="chatSection">
-        <div id="chatHeader">
-            <h3 id="chatTitle">Chat Pribadi</h3>
-            <input type="text" id="targetName" placeholder="Nama Tujuan/Grup" style="width: 80%; margin: 10px 0;">
-            <button onclick="setChatTarget()">Set Tujuan</button>
+    <!-- Main Content -->
+    <div id="main-content">
+        <!-- Login Form -->
+        <div id="login-container" class="auth-container">
+            <h2>Masuk</h2>
+            <div class="input-group">
+                <label for="login-username">Nama Pengguna</label>
+                <input type="text" id="login-username" placeholder="Masukkan nama pengguna">
+            </div>
+            <button class="btn" onclick="login()">Masuk</button>
+            <div class="switch-auth">
+                Belum punya akun? <a href="#" onclick="showRegister()">Daftar di sini</a>
+            </div>
         </div>
-        <div id="messages"></div>
-        <div id="chatInput">
-            <input type="text" id="messageText" placeholder="Ketik pesan...">
-            <button onclick="sendMessage()">Kirim</button>
+
+        <!-- Register Form -->
+        <div id="register-container" class="auth-container" style="display: none;">
+            <h2>Daftar</h2>
+            <div class="input-group">
+                <label for="reg-username">Nama Pengguna</label>
+                <input type="text" id="reg-username" placeholder="Buat nama pengguna">
+            </div>
+            <button class="btn" onclick="register()">Daftar</button>
+            <div class="switch-auth">
+                Sudah punya akun? <a href="#" onclick="showLogin()">Masuk di sini</a>
+            </div>
         </div>
     </div>
-
-    <!-- Story Section -->
-    <div id="storySection">
-        <h2>NS Stories</h2>
-        <div id="storyUpload">
-            <input type="file" id="storyFile" accept="image/*,video/*">
-            <button onclick="uploadStory()">Unggah Story</button>
-        </div>
-        <div id="storiesContainer"></div>
-    </div>
-
-    <!-- Footer -->
-    <footer>
-        &copy; 2026 NS Chat | Dibuat oleh Fenwi
-    </footer>
 
     <script>
-        // Data Storage
-        let currentUser = "";
-        let currentTarget = "";
-        let chats = JSON.parse(localStorage.getItem("nsChats")) || {};
-        let stories = JSON.parse(localStorage.getItem("nsStories")) || [];
+        // Splash screen delay - 1 DETIK (1000 milidetik)
+        setTimeout(function() {
+            document.getElementById("splash-screen").style.display = "none";
+            document.getElementById("main-content").style.display = "block";
+        }, 1000);
 
-        // Splash Screen
-        window.onload = () => {
-            setTimeout(() => {
-                document.getElementById("splash").classList.add("hide");
-            }, 1000); // Tampil 1 detik
-        };
+        // Fungsi untuk berpindah halaman login/daftar
+        function showRegister() {
+            document.getElementById("login-container").style.display = "none";
+            document.getElementById("register-container").style.display = "block";
+        }
 
-        // Register User
-        function registerUser() {
-            const name = document.getElementById("userName").value.trim();
-            if (!name) {
-                alert("Masukkan nama Anda terlebih dahulu!");
-                return;
+        function showLogin() {
+            document.getElementById("register-container").style.display = "none";
+            document.getElementById("login-container").style.display = "block";
+        }
+
+        // Fungsi login dan daftar sederhana
+        function login() {
+            const username = document.getElementById("login-username").value;
+            if (username) {
+                localStorage.setItem("nschat-username", username);
+                alert(`Selamat datang kembali, ${username}!`);
+                // Nanti bisa ditambahin kode untuk masuk ke halaman chat
+            } else {
+                alert("Silakan masukkan nama pengguna!");
             }
-            currentUser = name;
-            localStorage.setItem("nsCurrentUser", name);
-            document.getElementById("authSection").style.display = "none";
-            document.getElementById("menuSection").style.display = "block";
         }
 
-        // Open Chat Options
-        function openSingleChat() {
-            document.getElementById("chatTitle").textContent = "Chat Pribadi";
-            document.getElementById("chatSection").style.display = "block";
-            document.getElementById("menuSection").style.display = "none";
-            document.getElementById("storySection").style.display = "none";
-            loadMessages();
-        }
-
-        function openGroupChat() {
-            document.getElementById("chatTitle").textContent = "Chat Grup";
-            document.getElementById("chatSection").style.display = "block";
-            document.getElementById("menuSection").style.display = "none";
-            document.getElementById("storySection").style.display = "none";
-            loadMessages();
-        }
-
-        function setChatTarget() {
-            currentTarget = document.getElementById("targetName").value.trim();
-            if (!currentTarget) {
-                alert("Masukkan nama tujuan atau grup!");
-                return;
+        function register() {
+            const username = document.getElementById("reg-username").value;
+            if (username) {
+                localStorage.setItem("nschat-username", username);
+                alert(`Akun berhasil dibuat untuk ${username}!`);
+                showLogin();
+            } else {
+                alert("Silakan buat nama pengguna!");
             }
-            loadMessages();
         }
 
-        // Chat Functions
-        function loadMessages() {
-            const messagesDiv = document.getElementById("messages");
-            messagesDiv.innerHTML = "";
-            const chatKey = `${currentUser}-${currentTarget}` || currentTarget;
-            const chatHistory = chats[chatKey] || [];
-            
-            chatHistory.forEach(msg => {
-                const msgDiv = document.createElement("div");
-                msgDiv.className = msg.sender === currentUser ? "message myMessage" : "message otherMessage";
-                msgDiv.innerHTML = `<strong>${msg.sender}:</strong> ${msg.text}`;
-                messagesDiv.appendChild(msgDiv);
+        // Cek jika sudah ada akun yang login
+        window.onload = function() {
+            const savedUser = localStorage.getItem("nschat-username");
+            if (savedUser && document.getElementById("main-content").style.display !== "none") {
+                alert(`Selamat datang kembali, ${savedUser}!`);
+                // Nanti bisa ditambahin kode untuk langsung masuk ke halaman chat
+            }
+        }
+    </script>
+</body>
+</html>
+.appendChild(msgDiv);
             });
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
@@ -434,4 +285,5 @@
 </body>
               </html>
               
+
 
