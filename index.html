@@ -408,6 +408,107 @@
             color: #FFFFFF;
             cursor: pointer;
         }
+
+        /* Add Contact Popup */
+        #add-contact-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #16213E;
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            z-index: 999;
+        }
+        #add-contact-popup h3 {
+            color: #4CC9F0;
+            font-size: 18px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .close-popup-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 20px;
+            color: #A6B1E1;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+        <h1>NS Chat</h1>
+        <p>Hubungi orang tersayang dengan mudah</p>
+    </div>
+
+    <!-- Auth Page -->
+    <div id="auth-page">
+        <div class="auth-box">
+            <div id="login-form">
+                <h2>Masuk</h2>
+                <div class="input-group">
+                    <label for="login-name">Nama Pengguna</label>
+                    <input type="text" id="login-name" placeholder="Masukkan nama kamu">
+                </div>
+                <div class="input-group">
+                    <label for="login-pass">Kata Sandi</label>
+                    <input type="password" id="login-pass" placeholder="Masukkan kata sandi">
+                </div>
+                <button class="btn" onclick="loginUser()">Masuk</button>
+                <div class="switch-auth">
+                    Belum punya akun? <a href="#" onclick="toggleAuthForm()">Daftar di sini</a>
+                </div>
+            </div>
+
+            <div id="register-form" style="display: none;">
+                <h2>Daftar</h2>
+                <div class="input-group">
+                    <label for="reg-name">Nama Lengkap</label>
+                    <input type="text" id="reg-name" placeholder="Nama kamu lengkap">
+                </div>
+                <div class="input-group">
+                    <label for="reg-username">Nama Pengguna</label>
+                    <input type="text" id="reg-username" placeholder="Buat nama pengguna">
+                </div>
+                <div class="input-group">
+                    <label for="reg-pass">Kata Sandi</label>
+                    <input type="password" id="reg-pass" placeholder="Buat kata sandi">
+                </div>
+0%;
+            background-color: #4CC9F0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 24px;
+            margin: 0 auto 15px;
+        }
+        .popup-profile-name {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .popup-profile-status {
+            text-align: center;
+            font-size: 12px;
+            color: #A6B1E1;
+            margin-bottom: 20px;
+        }
+        .popup-logout-btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background-color: #E63946;
+            color: #FFFFFF;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -747,5 +848,6 @@
     </script>
 </body>
 </html>
+
 
 
