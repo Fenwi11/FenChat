@@ -33,7 +33,7 @@
         }
 
         /* Main Content Style */
-        #main-content {
+        #main-content, #chat-page {
             display: none;
             width: 100%;
             height: 100vh;
@@ -100,6 +100,73 @@
             color: #007bff;
             text-decoration: none;
         }
+
+        /* Chat Page Style */
+        #chat-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .chat-header {
+            padding: 15px;
+            background-color: #222222;
+            border-bottom: 1px solid #444444;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 20px;
+            max-width: 70%;
+        }
+
+        .my-message {
+            background-color: #007bff;
+            color: white;
+            margin-left: auto;
+        }
+
+        .other-message {
+            background-color: #333333;
+            color: white;
+            margin-right: auto;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 15px;
+            background-color: #222222;
+            border-top: 1px solid #444444;
+        }
+
+        .chat-input input {
+            flex-grow: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 20px;
+            background-color: #333333;
+            color: white;
+            margin-right: 10px;
+        }
+
+        .chat-input button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -108,7 +175,7 @@
         <h1>NS Chat</h1>
     </div>
 
-    <!-- Main Content -->
+    <!-- Auth Content -->
     <div id="main-content">
         <!-- Login Form -->
         <div id="login-container" class="auth-container">
@@ -137,11 +204,23 @@
         </div>
     </div>
 
+    <!-- Chat Page -->
+    <div id="chat-page">
+        <div class="chat-header">NS Chat - <span id="current-user"></span></div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message other-message">Halo! Selamat datang di NS Chat 😊</div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="message-input" placeholder="Ketik pesan...">
+            <button onclick="sendMessage()">Kirim</button>
+        </div>
+    </div>
+
     <script>
         // Splash screen delay - 1 DETIK (1000 milidetik)
         setTimeout(function() {
             document.getElementById("splash-screen").style.display = "none";
-            document.getElementById("main-content").style.display = "block";
+            checkLoggedIn();
         }, 1000);
 
         // Fungsi untuk berpindah halaman login/daftar
@@ -155,13 +234,12 @@
             document.getElementById("login-container").style.display = "block";
         }
 
-        // Fungsi login dan daftar sederhana
+        // Fungsi login dan daftar
         function login() {
             const username = document.getElementById("login-username").value;
             if (username) {
                 localStorage.setItem("nschat-username", username);
-                alert(`Selamat datang kembali, ${username}!`);
-                // Nanti bisa ditambahin kode untuk masuk ke halaman chat
+                goToChatPage(username);
             } else {
                 alert("Silakan masukkan nama pengguna!");
             }
@@ -172,118 +250,50 @@
             if (username) {
                 localStorage.setItem("nschat-username", username);
                 alert(`Akun berhasil dibuat untuk ${username}!`);
-                showLogin();
+                goToChatPage(username);
             } else {
                 alert("Silakan buat nama pengguna!");
             }
         }
 
-        // Cek jika sudah ada akun yang login
-        window.onload = function() {
+        // Fungsi ke halaman chat
+        function goToChatPage(username) {
+            document.getElementById("main-content").style.display = "none";
+            document.getElementById("chat-page").style.display = "flex";
+            document.getElementById("current-user").textContent = username;
+        }
+
+        // Cek jika sudah login
+        function checkLoggedIn() {
             const savedUser = localStorage.getItem("nschat-username");
-            if (savedUser && document.getElementById("main-content").style.display !== "none") {
-                alert(`Selamat datang kembali, ${savedUser}!`);
-                // Nanti bisa ditambahin kode untuk langsung masuk ke halaman chat
+            if (savedUser) {
+                goToChatPage(savedUser);
+            } else {
+                document.getElementById("main-content").style.display = "block";
             }
         }
+
+        // Fungsi kirim pesan
+        function sendMessage() {
+            const messageText = document.getElementById("message-input").value;
+            const username = localStorage.getItem("nschat-username");
+            if (messageText && username) {
+                const messagesContainer = document.getElementById("chat-messages");
+                const newMessage = document.createElement("div");
+                newMessage.className = "message my-message";
+                newMessage.textContent = messageText;
+                messagesContainer.appendChild(newMessage);
+                document.getElementById("message-input").value = "";
+                messagesContainer.scrollTop = messagesContainer.scrollHeight; // Gulir ke bawah
+            }
+        }
+
+        // Kirim pesan dengan tombol Enter
+        document.getElementById("message-input").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        });
     </script>
 </body>
 </html>
-.appendChild(msgDiv);
-            });
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
-
-        function sendMessage() {
-            const text = document.getElementById("messageText").value.trim();
-            if (!text || !currentTarget) return;
-            
-            const chatKey = `${currentUser}-${currentTarget}` || currentTarget;
-            if (!chats[chatKey]) chats[chatKey] = [];
-            
-            const message = {
-                sender: currentUser,
-                text: text,
-                time: new Date().toLocaleTimeString()
-            };
-            
-            chats[chatKey].push(message);
-            localStorage.setItem("nsChats", JSON.stringify(chats));
-            document.getElementById("messageText").value = "";
-            loadMessages();
-        }
-
-        // Story Functions
-        function openStorySection() {
-            document.getElementById("storySection").style.display = "block";
-            document.getElementById("menuSection").style.display = "none";
-            document.getElementById("chatSection").style.display = "none";
-            loadStories();
-        }
-
-        function uploadStory() {
-            const fileInput = document.getElementById("storyFile");
-            const file = fileInput.files[0];
-            if (!file) {
-                alert("Pilih foto/video terlebih dahulu!");
-                return;
-            }
-
-            // Baca file dan simpan sebagai URL (untuk HD)
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const story = {
-                    id: Date.now(),
-                    sender: currentUser,
-                    url: e.target.result,
-                    type: file.type.split("/")[0],
-                    time: new Date().toLocaleString()
-                };
-                stories.push(story);
-                localStorage.setItem("nsStories", JSON.stringify(stories));
-                loadStories();
-                fileInput.value = "";
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function loadStories() {
-            const container = document.getElementById("storiesContainer");
-            container.innerHTML = "";
-            stories.forEach(story => {
-                const item = document.createElement("div");
-                item.className = "storyItem";
-                if (story.type === "image") {
-                    item.innerHTML = `
-                        <img src="${story.url}" alt="Story ${story.sender}">
-                        <p><strong>${story.sender}</strong><br>${story.time}</p>
-                    `;
-                } else {
-                    item.innerHTML = `
-                        <video controls src="${story.url}" type="${story.type}/mp4"></video>
-                        <p><strong>${story.sender}</strong><br>${story.time}</p>
-                    `;
-                }
-                container.appendChild(item);
-            });
-        }
-
-        // Auto Login
-        window.onload = () => {
-            setTimeout(() => {
-                document.getElementById("splash").classList.add("hide");
-            }, 3000);
-
-            const savedUser = localStorage.getItem("nsCurrentUser");
-            if (savedUser) {
-                currentUser = savedUser;
-                document.getElementById("authSection").style.display = "none";
-                document.getElementById("menuSection").style.display = "block";
-            }
-        };
-    </script>
-</body>
-              </html>
-              
-
-
